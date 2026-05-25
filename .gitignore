@@ -9,3 +9,7 @@ demo
 build/
 bin/
 cmake/
+simulator/build
+*.out
+*.bin
+*.exe
