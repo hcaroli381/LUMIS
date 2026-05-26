@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/hugo/Documentos/lumis/simulator/cmake_install.cmake",
+		"/home/hugo/Documentos/lumis/simulator/lvgl/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

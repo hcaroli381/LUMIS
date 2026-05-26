@@ -1,2 +1,14 @@
-#warning This file is deprecated, you can include `lv_version.h` from `<include/lvgl/lv_version.h`
-#include "../include/lvgl/lv_version.h"
+/**
+ * @file version.h
+ * The current version of LVGL
+ */
+
+#ifndef LVGL_VERSION_H
+#define LVGL_VERSION_H
+
+#define LVGL_VERSION_MAJOR 9
+#define LVGL_VERSION_MINOR 6
+#define LVGL_VERSION_PATCH 0
+#define LVGL_VERSION_INFO "dev"
+
+#endif /*LVGL_VERSION_H*/
