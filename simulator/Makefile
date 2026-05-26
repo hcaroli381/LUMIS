@@ -311,6 +311,30 @@ home/hugo/Documentos/lumis/src/screens/Minecraft16.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft16.c.s
 .PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft16.c.s
 
+home/hugo/Documentos/lumis/src/screens/Minecraft24.o: home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.o
+
+# target to build an object file
+home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o
+
+home/hugo/Documentos/lumis/src/screens/Minecraft24.i: home/hugo/Documentos/lumis/src/screens/Minecraft24.c.i
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.i
+
+# target to preprocess a source file
+home/hugo/Documentos/lumis/src/screens/Minecraft24.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.i
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.c.i
+
+home/hugo/Documentos/lumis/src/screens/Minecraft24.s: home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.s
+
+# target to generate assembly for a file
+home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s
+.PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s
+
 home/hugo/Documentos/lumis/src/screens/Minecraft48.o: home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o
 .PHONY : home/hugo/Documentos/lumis/src/screens/Minecraft48.o
 
@@ -359,6 +383,30 @@ home/hugo/Documentos/lumis/src/screens/clock_screen.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.s
 .PHONY : home/hugo/Documentos/lumis/src/screens/clock_screen.c.s
 
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.o: home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.o
+
+# target to build an object file
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o
+
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.i: home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.i
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.i
+
+# target to preprocess a source file
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.i
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.i
+
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.s: home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.s
+
+# target to generate assembly for a file
+home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s
+.PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -386,12 +434,18 @@ help:
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft16.o"
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft16.i"
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft16.s"
+	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft24.o"
+	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft24.i"
+	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft24.s"
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft48.o"
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft48.i"
 	@echo "... home/hugo/Documentos/lumis/src/screens/Minecraft48.s"
 	@echo "... home/hugo/Documentos/lumis/src/screens/clock_screen.o"
 	@echo "... home/hugo/Documentos/lumis/src/screens/clock_screen.i"
 	@echo "... home/hugo/Documentos/lumis/src/screens/clock_screen.s"
+	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.o"
+	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.i"
+	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.s"
 .PHONY : help
 
 

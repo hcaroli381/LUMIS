@@ -7,6 +7,8 @@ bin/main: \
   CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o \
   CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft16.c.o \
   CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o \
+  CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o \
+  CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o \
   lvgl/lib/liblvgl.a \
   lvgl/lib/liblvgl_examples.a \
   lvgl/lib/liblvgl_demos.a \
@@ -84,6 +86,10 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o:
 CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft16.c.o:
 
 CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o:
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o:
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o:
 
 lvgl/lib/liblvgl.a:
 

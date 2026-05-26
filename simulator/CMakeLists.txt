@@ -27,7 +27,10 @@ add_executable(main ../src/main.c
     ../src/mouse_cursor_icon.c 
     ../src/screens/clock_screen.c 
     ../src/screens/Minecraft16.c
-    ../src/screens/Minecraft48.c)
+    ../src/screens/Minecraft48.c
+    ../src/screens/lumisAssistant.c
+    ../src/screens/Minecraft24.c
+   )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
