@@ -13,3 +13,4 @@ simulator/build
 *.out
 *.bin
 *.exe
+src/tarjeta_sd/

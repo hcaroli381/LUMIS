@@ -3,7 +3,7 @@ project(lvgl)
 
 option(LV_USE_DRAW_SDL "Use SDL draw unit" OFF)
 option(LV_USE_LIBPNG "Use libpng to decode PNG" OFF)
-option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" OFF)
+option(LV_USE_LIBJPEG_TURBO "Use libjpeg turbo to decode JPEG" ON)
 option(LV_USE_FFMPEG "Use libffmpeg to display video using lv_ffmpeg" OFF)
 option(LV_USE_FREETYPE "Use freetype lib" OFF)
 
@@ -33,7 +33,7 @@ add_executable(main ../src/main.c
    )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
-target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread)
+target_link_libraries(main lvgl lvgl::examples lvgl::demos lvgl::thorvg ${SDL2_LIBRARIES} m pthread jpeg)
 add_custom_target (run COMMAND ${EXECUTABLE_OUTPUT_PATH}/main DEPENDS main)
 
 if(LV_USE_DRAW_SDL)

@@ -2,6 +2,9 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <dirent.h>
+#include <string.h>
+#include <stdlib.h>
 
 // fuentes
 LV_FONT_DECLARE(Minecraft48);
@@ -21,6 +24,13 @@ static lv_timer_t *timer_reloj = NULL;
 static lv_obj_t *panel_musica;
 static lv_obj_t *label_modo;
 static int modo_actual = 0;
+static lv_obj_t *label_tiempo_progreso = NULL;
+static int cancion_segundos_actual = 34;
+static int cancion_segundos_total = 151;
+static lv_obj_t *label_cancion = NULL; // Mapea el texto de la canción en grande
+static int indice_cancion_actual = 0;  // Para saber por qué canción va Nuria
+static lv_obj_t *img_caratula = NULL;
+static lv_obj_t *icono_mp3_global = NULL;
 
 // Variables del Despertador
 static lv_obj_t *panel_despertador;
@@ -36,6 +46,7 @@ static int alarma_confirmada_hora = 0;
 static int alarma_confirmada_min = 0;
 static bool alarma_activa = false; // Nos dice si hay una alarma puesta o no
 
+static void cargar_cancion_de_carpeta(void);
 static void _actualizar_reloj(lv_timer_t *timer)
 {
     (void)timer;
@@ -52,6 +63,14 @@ static void cb_toggle_reproductor(lv_event_t *e)
     {
         lv_obj_add_flag(panel_musica, LV_OBJ_FLAG_HIDDEN);
     }
+    // Al final de cb_cambiar_modo añadimos esto:
+    indice_cancion_actual = 0; // Reseteamos al cambiar de carpeta
+    cargar_cancion_de_carpeta();
+}
+static void cb_siguiente_cancion(lv_event_t *e)
+{
+    indice_cancion_actual++;
+    cargar_cancion_de_carpeta();
 }
 
 static void cb_cambiar_modo(lv_event_t *e)
@@ -63,6 +82,10 @@ static void cb_cambiar_modo(lv_event_t *e)
         lv_label_set_text(label_modo, "Estudio");
     else if (modo_actual == 2)
         lv_label_set_text(label_modo, "Lata34");
+
+    // ── AÑADE ESTAS DOS LÍNEAS JUSTO AQUÍ ABAJO ──
+    indice_cancion_actual = 0;   // Forzamos a que empiece en la primera canción de la nueva lista
+    cargar_cancion_de_carpeta(); // Forzamos a que lea la carpeta inmediatamente al cambiar
 }
 
 static void cb_toggle_despertador(lv_event_t *e)
@@ -130,6 +153,406 @@ static void cb_borrar_alarma(lv_event_t *e)
     lv_obj_add_flag(panel_despertador, LV_OBJ_FLAG_HIDDEN);
 
     printf("[SISTEMA] Alarma borrada por el usuario.\n");
+}
+
+#include <string.h>
+
+// Función para obtener la duración real de un MP3 leyendo sus bytes de cabecera
+static int obtener_duracion_mp3(const char *ruta_archivo)
+{
+    FILE *f = fopen(ruta_archivo, "rb");
+    if (!f)
+        return 180;
+
+    // 1. Saltamos el tag ID3v2
+    long offset_audio = 0;
+    unsigned char cabecera[10];
+    if (fread(cabecera, 1, 10, f) == 10)
+    {
+        if (cabecera[0] == 'I' && cabecera[1] == 'D' && cabecera[2] == '3')
+        {
+            long tag_size = ((cabecera[6] & 0x7F) << 21) |
+                            ((cabecera[7] & 0x7F) << 14) |
+                            ((cabecera[8] & 0x7F) << 7) |
+                            (cabecera[9] & 0x7F);
+            offset_audio = 10 + tag_size;
+        }
+    }
+
+    static const int tabla_bitrates[] = {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0};
+    static const int tabla_samplerate[] = {44100, 48000, 32000, 0};
+
+    // 2. Leemos el primer frame MPEG
+    fseek(f, offset_audio, SEEK_SET);
+    unsigned char frame[4];
+    long pos = offset_audio;
+    int encontrado = 0;
+    int samplerate = 44100;
+    int canales = 2;
+
+    for (int i = 0; i < 32768; i++)
+    {
+        fseek(f, pos, SEEK_SET);
+        if (fread(frame, 1, 4, f) < 4)
+            break;
+
+        if (frame[0] == 0xFF && (frame[1] & 0xE0) == 0xE0)
+        {
+            int version = (frame[1] >> 3) & 0x03;
+            int layer = (frame[1] >> 1) & 0x03;
+            int idx_sr = (frame[2] >> 2) & 0x03;
+            int modo = (frame[3] >> 6) & 0x03; // 3 = mono
+
+            if (version == 3 && layer == 1 && idx_sr < 3)
+            {
+                samplerate = tabla_samplerate[idx_sr];
+                canales = (modo == 3) ? 1 : 2;
+                encontrado = 1;
+                break;
+            }
+        }
+        pos++;
+    }
+
+    if (!encontrado)
+    {
+        fclose(f);
+        return 180;
+    }
+
+    // 3. Buscamos el header Xing/Info dentro del primer frame
+    //    Offset desde inicio del frame: 4 bytes header + side_info
+    //    Side info: 32 bytes stereo, 17 bytes mono (MPEG1)
+    int side_info_size = (canales == 1) ? 17 : 32;
+    long xing_offset = pos + 4 + side_info_size;
+
+    fseek(f, xing_offset, SEEK_SET);
+    unsigned char xing_buf[120];
+    int xing_leidos = (int)fread(xing_buf, 1, sizeof(xing_buf), f);
+
+    // Buscamos "Xing" o "Info" en los primeros bytes
+    int xing_pos = -1;
+    for (int i = 0; i <= xing_leidos - 4; i++)
+    {
+        if ((memcmp(xing_buf + i, "Xing", 4) == 0) ||
+            (memcmp(xing_buf + i, "Info", 4) == 0))
+        {
+            xing_pos = i;
+            printf("[DURACION] Header %c%c%c%c encontrado!\n",
+                   xing_buf[i], xing_buf[i + 1], xing_buf[i + 2], xing_buf[i + 3]);
+            break;
+        }
+    }
+
+    if (xing_pos >= 0 && xing_pos + 8 <= xing_leidos)
+    {
+        unsigned char *x = xing_buf + xing_pos;
+        unsigned long flags = ((unsigned long)x[4] << 24) | ((unsigned long)x[5] << 16) |
+                              ((unsigned long)x[6] << 8) | (unsigned long)x[7];
+
+        if (flags & 0x01) // Bit 0 = tiene número de frames
+        {
+            unsigned long num_frames = ((unsigned long)x[8] << 24) |
+                                       ((unsigned long)x[9] << 16) |
+                                       ((unsigned long)x[10] << 8) |
+                                       (unsigned long)x[11];
+
+            // 1152 muestras por frame en MPEG1 Layer III
+            int duracion = (int)((double)num_frames * 1152.0 / samplerate);
+            printf("[DURACION] Xing: %lu frames → %d seg (%d:%02d)\n",
+                   num_frames, duracion, duracion / 60, duracion % 60);
+            fclose(f);
+            return duracion > 0 ? duracion : 180;
+        }
+    }
+
+    // 4. Fallback: si no hay Xing, usamos tamaño + bitrate del frame
+    printf("[DURACION] Sin Xing, calculando por tamaño...\n");
+    int idx_br = (frame[2] >> 4) & 0x0F;
+    int bitrate_kbps = tabla_bitrates[idx_br];
+
+    fseek(f, 0, SEEK_END);
+    long tamano_audio = ftell(f) - offset_audio;
+    fclose(f);
+
+    if (bitrate_kbps >= 32 && bitrate_kbps <= 320)
+    {
+        int duracion = (int)((tamano_audio * 8L) / ((long)bitrate_kbps * 1000L));
+        printf("[DURACION] Bitrate frame: %d kbps → %d seg (%d:%02d)\n",
+               bitrate_kbps, duracion, duracion / 60, duracion % 60);
+        return duracion > 0 ? duracion : 180;
+    }
+
+    return (int)(tamano_audio / 24000); // último fallback 192kbps
+}
+// Función PRO para extraer el JPG oculto dentro del archivo MP3
+// ─── EXTRAE LA CARÁTULA (APIC) DE UN ID3v2 ─────────────────────────────────
+// Devuelve 1 si tuvo éxito, 0 si no hay carátula.
+static int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg)
+{
+    printf("[DEBUG] Abriendo: %s\n", ruta_mp3);
+    FILE *f = fopen(ruta_mp3, "rb");
+    if (!f)
+    {
+        printf("[DEBUG] ERROR: No pude abrir el archivo\n");
+        return 0;
+    }
+
+    unsigned char header[10];
+    if (fread(header, 1, 10, f) < 10)
+    {
+        fclose(f);
+        printf("[DEBUG] ERROR: No pude leer 10 bytes de cabecera\n");
+        return 0;
+    }
+
+    printf("[DEBUG] Primeros 3 bytes: %c%c%c (version %d.%d)\n",
+           header[0], header[1], header[2], header[3], header[4]);
+
+    if (header[0] != 'I' || header[1] != 'D' || header[2] != '3')
+    {
+        // ── Puede que el MP3 NO tenga ID3v2 al principio.
+        // Algunos editores ponen el tag ID3v2 AL FINAL del archivo.
+        printf("[DEBUG] No hay ID3v2 al principio. Buscando al final...\n");
+
+        fseek(f, -128, SEEK_END);
+        unsigned char id3v1[3];
+        fread(id3v1, 1, 3, f);
+        if (id3v1[0] == 'T' && id3v1[1] == 'A' && id3v1[2] == 'G')
+            printf("[DEBUG] Tiene ID3v1 al final (no contiene carátula)\n");
+        else
+            printf("[DEBUG] Sin ningún tag ID3 reconocido\n");
+
+        fclose(f);
+        return 0;
+    }
+
+    int version_mayor = header[3];
+    long tag_size = ((header[6] & 0x7F) << 21) |
+                    ((header[7] & 0x7F) << 14) |
+                    ((header[8] & 0x7F) << 7) |
+                    (header[9] & 0x7F);
+
+    printf("[DEBUG] ID3v2.%d detectado. Tamaño del tag: %ld bytes\n", version_mayor, tag_size);
+
+    unsigned char *tag_data = (unsigned char *)malloc(tag_size);
+    if (!tag_data)
+    {
+        fclose(f);
+        printf("[DEBUG] ERROR: malloc falló\n");
+        return 0;
+    }
+
+    long leidos = (long)fread(tag_data, 1, tag_size, f);
+    fclose(f);
+    printf("[DEBUG] Bytes leídos del tag: %ld\n", leidos);
+
+    // ── Listamos TODOS los frames encontrados ──────────────────────────────
+    long pos = 0;
+    int encontrado = 0;
+
+    printf("[DEBUG] Frames encontrados:\n");
+    while (pos < tag_size - 10)
+    {
+        char frame_id[5];
+        memcpy(frame_id, tag_data + pos, 4);
+        frame_id[4] = '\0';
+
+        // Si el frame_id empieza por \0 es padding, fin del tag
+        if (frame_id[0] == '\0')
+            break;
+
+        long frame_size;
+        if (version_mayor == 4)
+            frame_size = ((tag_data[pos + 4] & 0x7F) << 21) |
+                         ((tag_data[pos + 5] & 0x7F) << 14) |
+                         ((tag_data[pos + 6] & 0x7F) << 7) |
+                         (tag_data[pos + 7] & 0x7F);
+        else
+            frame_size = ((long)tag_data[pos + 4] << 24) |
+                         ((long)tag_data[pos + 5] << 16) |
+                         ((long)tag_data[pos + 6] << 8) |
+                         (long)tag_data[pos + 7];
+
+        printf("[DEBUG]   Frame: '%s'  tamaño: %ld\n", frame_id, frame_size);
+
+        if (frame_size <= 0 || pos + 10 + frame_size > tag_size)
+            break;
+
+        if (strcmp(frame_id, "APIC") == 0)
+        {
+            unsigned char *apic = tag_data + pos + 10;
+            long apic_size = frame_size;
+
+            unsigned char encoding = apic[0];
+            printf("[DEBUG] APIC encontrado! Encoding: %d\n", encoding);
+
+            long offset = 1;
+
+            // Leemos MIME type para saber qué formato es
+            char mime[64] = "";
+            int mi = 0;
+            while (offset < apic_size && apic[offset] != '\0' && mi < 63)
+                mime[mi++] = apic[offset++];
+            mime[mi] = '\0';
+            offset++; // \0 del mime
+
+            unsigned char pic_type = apic[offset++];
+            printf("[DEBUG] MIME: '%s'  Tipo imagen: %d\n", mime, pic_type);
+
+            // Saltamos descripción (respetando encoding UTF-16 con \0\0)
+            if (encoding == 1 || encoding == 2) // UTF-16
+            {
+                while (offset < apic_size - 1 &&
+                       !(apic[offset] == 0x00 && apic[offset + 1] == 0x00))
+                    offset += 2;
+                offset += 2;
+            }
+            else // Latin-1 o UTF-8
+            {
+                while (offset < apic_size && apic[offset] != '\0')
+                    offset++;
+                offset++;
+            }
+
+            long imagen_size = apic_size - offset;
+            printf("[DEBUG] Offset imagen: %ld  Tamaño imagen: %ld bytes\n", offset, imagen_size);
+            printf("[DEBUG] Primeros bytes imagen: %02X %02X %02X %02X\n",
+                   apic[offset], apic[offset + 1], apic[offset + 2], apic[offset + 3]);
+
+            if (imagen_size > 0)
+            {
+                printf("[DEBUG] Escribiendo en: %s\n", ruta_salida_jpg);
+                FILE *out = fopen(ruta_salida_jpg, "wb");
+                if (!out)
+                {
+                    printf("[DEBUG] ERROR: No pude crear el archivo de salida\n");
+                }
+                else
+                {
+                    fwrite(apic + offset, 1, imagen_size, out);
+                    fclose(out);
+                    printf("[DEBUG] ¡Carátula guardada OK! (%ld bytes)\n", imagen_size);
+                    encontrado = 1;
+                }
+            }
+            break;
+        }
+
+        pos += 10 + frame_size;
+    }
+
+    if (!encontrado)
+        printf("[DEBUG] No se encontró frame APIC en el tag\n");
+
+    free(tag_data);
+    return encontrado;
+}
+
+static void cargar_cancion_de_carpeta(void)
+{
+    if (label_cancion == NULL)
+        return;
+
+    // 1. Decidimos qué carpeta mirar según el botón "Cambiar Lista"
+    const char *ruta_carpeta = "../src/tarjeta_sd/Silencio";
+    if (modo_actual == 1)
+        ruta_carpeta = "../src/tarjeta_sd/Estudio";
+    else if (modo_actual == 2)
+        ruta_carpeta = "../src/tarjeta_sd/Lata34";
+
+    DIR *dir = opendir(ruta_carpeta);
+    if (dir == NULL)
+    {
+        // ── AÑADE ESTAS DOS LÍNEAS DE CONTROL AQUÍ ──
+        printf("[SD] ERROR al abrir la carpeta: %s\n", ruta_carpeta);
+        perror("[SD] Motivo del fallo");
+
+        lv_label_set_text(label_cancion, "Sin Tarjeta SD");
+        return;
+    }
+
+    struct dirent *entrada;
+    int contador = 0;
+    char nombre_encontrado[64] = "";
+
+    // 2. Escaneamos los archivos de la carpeta (.mp3, etc.)
+    while ((entrada = readdir(dir)) != NULL)
+    {
+        // Ignoramos archivos invisibles del sistema operativo
+        if (entrada->d_name[0] == '.')
+            continue;
+
+        if (contador == indice_cancion_actual)
+        {
+            snprintf(nombre_encontrado, sizeof(nombre_encontrado), "%s", entrada->d_name);
+            break;
+        }
+        contador++;
+    }
+
+    // Si Nuria llega al final de las canciones de la carpeta, vuelve a la primera
+    if (nombre_encontrado[0] == '\0' && indice_cancion_actual > 0)
+    {
+        indice_cancion_actual = 0;
+        rewinddir(dir);
+        while ((entrada = readdir(dir)) != NULL)
+        {
+            if (entrada->d_name[0] == '.')
+                continue;
+            snprintf(nombre_encontrado, sizeof(nombre_encontrado), "%s", entrada->d_name);
+            break;
+        }
+    }
+    // Dentro de cargar_cancion_de_carpeta, donde actualizas la pantalla:
+    if (nombre_encontrado[0] != '\0')
+    {
+        lv_label_set_text(label_cancion, nombre_encontrado);
+
+        // ── AQUÍ CALCULAMOS LA DURACIÓN REAL AUTOMÁTICAMENTE ──
+        char ruta_completa[256];
+        snprintf(ruta_completa, sizeof(ruta_completa), "%s/%s", ruta_carpeta, nombre_encontrado);
+        cancion_segundos_total = obtener_duracion_mp3(ruta_completa);
+    }
+    closedir(dir);
+
+    // 3. ¡Actualizamos la pantalla con el archivo real!
+    // ── Justo antes del bloque "MAGIA: EXTRAER LA CARÁTULA" ─────────────
+    if (nombre_encontrado[0] == '\0')
+    {
+        lv_obj_clear_flag(icono_mp3_global, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(img_caratula, LV_OBJ_FLAG_HIDDEN);
+        return; // ← carpeta vacía, no intentamos extraer nada
+    }
+
+    // ── MAGIA: EXTRAER LA CARÁTULA INCRUSTADA EN TIEMPO REAL ──
+    char ruta_temp_jpg[256] = "../src/tarjeta_sd/cover_temp.jpg";
+    char ruta_lvgl_jpg[256] = "A:../src/tarjeta_sd/cover_temp.jpg";
+
+    // Extraemos la carátula desde la ruta_completa calculada antes para la duración
+    char ruta_completa[256];
+    snprintf(ruta_completa, sizeof(ruta_completa), "%s/%s", ruta_carpeta, nombre_encontrado);
+
+    if (extraer_caratula_mp3(ruta_completa, ruta_temp_jpg))
+    {
+        // ¡Tenemos foto! Ocultamos la nota musical y encendemos el lienzo
+        lv_obj_add_flag(icono_mp3_global, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(img_caratula, LV_OBJ_FLAG_HIDDEN);
+
+        // Vaciamos la memoria caché de LVGL para obligarle a cargar la nueva foto
+        // lv_image_cache_drop(NULL);
+
+        // Le pasamos el JPG puro recién extraído al simulador
+        lv_img_set_src(img_caratula, ruta_lvgl_jpg);
+    }
+    else
+    {
+        // El MP3 no tiene carátula incrustada, mostramos la nota musical retro
+        lv_obj_clear_flag(icono_mp3_global, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(img_caratula, LV_OBJ_FLAG_HIDDEN);
+    }
+    // Cada vez que cambia de canción, el segundero de Nuria vuelve a empezar en 0:00
+    cancion_segundos_actual = 0;
 }
 
 void clock_screen_create(void)
@@ -228,6 +651,7 @@ void clock_screen_create(void)
     lv_obj_align(label_campana, LV_ALIGN_CENTER, 0, 0);
 
     // ── PANEL REPRODUCTOR MULTIMEDIA ──
+    // ── PANEL REPRODUCTOR MULTIMEDIA ──
     panel_musica = lv_obj_create(pantalla);
     lv_obj_set_size(panel_musica, 944, 520);
     lv_obj_set_pos(panel_musica, 40, 40);
@@ -243,27 +667,61 @@ void clock_screen_create(void)
     lv_obj_set_style_text_font(label_titulo, &Minecraft24, 0);
     lv_obj_align(label_titulo, LV_ALIGN_TOP_MID, 0, 20);
 
+    // 📸 FOTO/CARÁTULA DEL MP3 (Estilo Caja Pixel-Art a la izquierda)
+    lv_obj_t *caja_foto_mp3 = lv_obj_create(panel_musica);
+    lv_obj_set_size(caja_foto_mp3, 180, 180);
+    lv_obj_align(caja_foto_mp3, LV_ALIGN_CENTER, -240, -40);             // Súper a la izquierda
+    lv_obj_set_style_bg_color(caja_foto_mp3, lv_color_hex(0x2C2C2C), 0); // Fondo oscuro retro
+    lv_obj_set_style_radius(caja_foto_mp3, 12, 0);
+    lv_obj_set_style_border_width(caja_foto_mp3, 4, 0);
+    lv_obj_set_style_border_color(caja_foto_mp3, COLOR_CAJA_HORA, 0); // Borde dorado
+
+    // Icono musical dentro de la foto
+    // 1. Icono musical dentro de la foto (usando la variable global)
+    icono_mp3_global = lv_label_create(caja_foto_mp3);
+    lv_label_set_text(icono_mp3_global, LV_SYMBOL_AUDIO);
+    lv_obj_set_style_text_font(icono_mp3_global, &Minecraft48, 0);
+    lv_obj_set_style_text_color(icono_mp3_global, lv_color_white(), 0);
+    lv_obj_align(icono_mp3_global, LV_ALIGN_CENTER, 0, 0);
+
+    // 2. 🖼️ Lienzo invisible para la foto real (usando la variable global)
+    img_caratula = lv_img_create(caja_foto_mp3);
+    lv_obj_align(img_caratula, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_flag(img_caratula, LV_OBJ_FLAG_HIDDEN); // Se queda oculta hasta que haya foto
+    // TEXTOS DESPLAZADOS A LA DERECHA PARA DEJAR SITIO A LA FOTO
     lv_obj_t *label_now_playing = lv_label_create(panel_musica);
     lv_label_set_text(label_now_playing, "NOW PLAYING:");
     lv_obj_set_style_text_font(label_now_playing, &Minecraft16, 0);
-    lv_obj_align(label_now_playing, LV_ALIGN_CENTER, 0, -110);
+    lv_obj_align(label_now_playing, LV_ALIGN_CENTER, 80, -110);
 
-    lv_obj_t *label_cancion = lv_label_create(panel_musica);
+    label_cancion = lv_label_create(panel_musica);
     lv_label_set_text(label_cancion, "Intro (Lata34 Mix)");
-    lv_obj_set_style_text_font(label_cancion, &Minecraft48, 0);
-    lv_obj_align(label_cancion, LV_ALIGN_CENTER, 0, -60);
+    lv_obj_set_style_text_font(label_cancion, &Minecraft24, 0); // 1. Letra más pequeña (24 en vez de 48)
+
+    // 2. Le ponemos un límite de ancho y hacemos que ruede si se pasa
+    lv_obj_set_width(label_cancion, 450);
+    lv_label_set_long_mode(label_cancion, LV_LABEL_LONG_SCROLL_CIRCULAR);
+
+    lv_obj_align(label_cancion, LV_ALIGN_CENTER, 80, -60);
 
     lv_obj_t *label_autor = lv_label_create(panel_musica);
-    lv_label_set_text(label_autor, "Hugo & Friends");
+    lv_label_set_text(label_autor, "Exclusivo para Nuria "); // ¡Corregido para Nuria con un corazón!
     lv_obj_set_style_text_font(label_autor, &Minecraft24, 0);
-    lv_obj_align(label_autor, LV_ALIGN_CENTER, 0, -10);
+    lv_obj_set_style_text_color(label_autor, lv_color_hex(0xA3423C), 0); // Rojo elegante
+    lv_obj_align(label_autor, LV_ALIGN_CENTER, 80, -10);
+
+    // ⏱️ MARCADOR DE TIEMPO (0:34 - 2:31)
+    label_tiempo_progreso = lv_label_create(panel_musica);
+    lv_label_set_text(label_tiempo_progreso, "0:34 - 2:31");
+    lv_obj_set_style_text_font(label_tiempo_progreso, &Minecraft24, 0);
+    lv_obj_set_style_text_color(label_tiempo_progreso, lv_color_hex(0x666666), 0);
+    lv_obj_align(label_tiempo_progreso, LV_ALIGN_CENTER, 80, 30); // Justo debajo del autor
 
     label_modo = lv_label_create(panel_musica);
     lv_label_set_text(label_modo, "Silencio");
     lv_obj_set_style_text_font(label_modo, &Minecraft24, 0);
     lv_obj_set_style_text_color(label_modo, lv_color_hex(0xD2A14E), 0);
-    lv_obj_align(label_modo, LV_ALIGN_CENTER, 0, 40);
-
+    lv_obj_align(label_modo, LV_ALIGN_CENTER, 80, 70);
     lv_obj_t *btn_modo = lv_button_create(panel_musica);
     lv_obj_set_size(btn_modo, 220, 80);
     lv_obj_align(btn_modo, LV_ALIGN_BOTTOM_LEFT, 60, -40);
@@ -298,6 +756,8 @@ void clock_screen_create(void)
     lv_obj_set_style_radius(btn_next, 0, 0);
     lv_obj_set_style_border_width(btn_next, 4, 0);
     lv_obj_set_style_border_color(btn_next, COLOR_BORDE_RETRO, 0);
+    // Busca btn_next y añade esta línea abajo:
+    lv_obj_add_event_cb(btn_next, cb_siguiente_cancion, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *label_next = lv_label_create(btn_next);
     lv_label_set_text(label_next, ">>");
@@ -461,5 +921,29 @@ void clock_screen_update(void)
         {
             printf("\n[ALERTA DESPERTADOR] ¡¡RING RING!! Despierta Hugo, son las %02d:%02d\n", alarma_confirmada_hora, alarma_confirmada_min);
         }
+    }
+
+    // ── Lógica de Progreso del MP3 de Nuria ──
+    if (label_tiempo_progreso != NULL)
+    {
+        cancion_segundos_actual++;
+
+        if (cancion_segundos_actual > cancion_segundos_total)
+        {
+            cancion_segundos_actual = 0;
+        }
+
+        // Calculamos los minutos y segundos por donde va la canción
+        int min_actual = cancion_segundos_actual / 60;
+        int seg_actual = cancion_segundos_actual % 60;
+
+        // ── ESTO ES LO NUEVO: Calculamos los minutos y segundos TOTALES ──
+        int min_total = cancion_segundos_total / 60;
+        int seg_total = cancion_segundos_total % 60;
+
+        // Lo pintamos dinámicamente ("Actual - Total")
+        char buf_tiempo[30];
+        snprintf(buf_tiempo, sizeof(buf_tiempo), "%d:%02d - %d:%02d", min_actual, seg_actual, min_total, seg_total);
+        lv_label_set_text(label_tiempo_progreso, buf_tiempo);
     }
 }

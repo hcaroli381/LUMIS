@@ -147030,6 +147030,57 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o
  /home/hugo/Documentos/lumis/simulator/lvgl/include/lvgl/widgets/lv_tileview.h
  /home/hugo/Documentos/lumis/simulator/lvgl/include/lvgl/widgets/lv_win.h
  /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/debugging/sysmon/lv_sysmon_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/debugging/test/lv_test_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/lv_draw_buf_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/lv_draw_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/lv_cache.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/lv_cache_entry.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_os_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/lv_draw_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/sw/blend/lv_draw_sw_blend.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/sw/lv_draw_sw.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/sw/lv_draw_sw_mask.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/sw/lv_draw_sw_mask_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/sw/lv_draw_sw_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/layouts/lv_layout_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/lv_anim_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/lv_timer_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_os_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_os_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/stdlib/builtin/lv_tlsf.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/stdlib/builtin/lv_tlsf_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/tick/lv_tick_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/core/lv_global.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_linux.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_os_none.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/osal/lv_os_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/lv_iter_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/lv_cache.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/class/lv_cache_class.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/class/lv_cache_lru_ll.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/class/lv_cache_lru_rb.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/class/lv_cache_sc_da.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/lv_iter_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/lv_cache.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/instance/lv_image_cache.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/misc/cache/lv_cache.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/draw/lv_image_decoder_private.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/lvgl_public.h
+ /usr/include/bits/floatn-common.h
+ /usr/include/bits/floatn.h
  /usr/include/bits/libc-header-start.h
  /usr/include/bits/local_lim.h
  /usr/include/bits/long-double.h
@@ -147037,12 +147088,23 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o
  /usr/include/bits/posix2_lim.h
  /usr/include/bits/pthread_stack_min-dynamic.h
  /usr/include/bits/pthread_stack_min.h
+ /usr/include/bits/setjmp.h
  /usr/include/bits/stdint-intn.h
  /usr/include/bits/stdint-least.h
  /usr/include/bits/stdint-uintn.h
+ /usr/include/bits/stdio_lim.h
  /usr/include/bits/time64.h
  /usr/include/bits/timesize.h
  /usr/include/bits/types.h
+ /usr/include/bits/types/FILE.h
+ /usr/include/bits/types/__FILE.h
+ /usr/include/bits/types/__fpos64_t.h
+ /usr/include/bits/types/__fpos_t.h
+ /usr/include/bits/types/__mbstate_t.h
+ /usr/include/bits/types/__sigset_t.h
+ /usr/include/bits/types/cookie_io_functions_t.h
+ /usr/include/bits/types/struct_FILE.h
+ /usr/include/bits/types/struct___jmp_buf_tag.h
  /usr/include/bits/typesizes.h
  /usr/include/bits/wchar.h
  /usr/include/bits/wordsize.h
@@ -147051,10 +147113,16 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o
  /usr/include/gnu/stubs-64.h
  /usr/include/gnu/stubs.h
  /usr/include/inttypes.h
+ /usr/include/jconfig.h
+ /usr/include/jmorecfg.h
+ /usr/include/jpegint.h
+ /usr/include/jpeglib.h
  /usr/include/limits.h
  /usr/include/linux/limits.h
+ /usr/include/setjmp.h
  /usr/include/stdc-predef.h
  /usr/include/stdint.h
+ /usr/include/stdio.h
  /usr/include/sys/cdefs.h
  /usr/lib/gcc/x86_64-redhat-linux/16/include/float.h
  /usr/lib/gcc/x86_64-redhat-linux/16/include/limits.h

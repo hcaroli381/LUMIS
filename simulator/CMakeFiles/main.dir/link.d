@@ -16,6 +16,7 @@ bin/main: \
   /usr/lib64/libSDL2main.a \
   /usr/lib64/libSDL2-2.0.so.0.3200.68 \
   /usr/lib/gcc/x86_64-redhat-linux/16/../../../../lib64/libpthread.a \
+  /usr/lib/gcc/x86_64-redhat-linux/16/../../../../lib64/libjpeg.so \
   lvgl/lib/liblvgl.a \
   lvgl/lib/liblvgl_examples.a \
   lvgl/lib/liblvgl_demos.a \
@@ -104,6 +105,8 @@ lvgl/lib/liblvgl_thorvg.a:
 /usr/lib64/libSDL2-2.0.so.0.3200.68:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/../../../../lib64/libpthread.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/16/../../../../lib64/libjpeg.so:
 
 lvgl/lib/liblvgl.a:
 

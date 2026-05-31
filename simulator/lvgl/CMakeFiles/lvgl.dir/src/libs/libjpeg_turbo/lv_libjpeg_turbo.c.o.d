@@ -463,4 +463,69 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o: \
  /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../../include/lvgl/widgets/lv_tabview.h \
  /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../../include/lvgl/widgets/lv_textarea.h \
  /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../../include/lvgl/widgets/lv_tileview.h \
- /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../../include/lvgl/widgets/lv_win.h
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../../include/lvgl/widgets/lv_win.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/lv_image_decoder_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/lv_cache.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../lv_iter_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../osal/lv_os_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../osal/../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../osal/lv_linux.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../osal/lv_os_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/../../osal/lv_os_none.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/class/lv_cache_class.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/class/lv_cache_lru_rb.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/class/../lv_cache.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/class/lv_cache_lru_ll.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/class/lv_cache_sc_da.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/instance/lv_image_cache.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/instance/../../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/instance/../../lv_iter_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../draw/../misc/cache/instance/../lv_cache.h \
+ /usr/include/stdio.h /usr/include/bits/types/__fpos_t.h \
+ /usr/include/bits/types/__mbstate_t.h \
+ /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
+ /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
+ /usr/include/bits/types/cookie_io_functions_t.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
+ /usr/include/bits/floatn-common.h /usr/include/jpeglib.h \
+ /usr/include/jconfig.h /usr/include/jmorecfg.h /usr/include/jpegint.h \
+ /usr/include/setjmp.h /usr/include/bits/setjmp.h \
+ /usr/include/bits/types/struct___jmp_buf_tag.h \
+ /usr/include/bits/types/__sigset_t.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/lv_global.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/lv_draw_sw.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../lv_draw_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../../osal/lv_os_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../../misc/cache/lv_cache.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../../misc/cache/lv_cache_entry.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/../../misc/cache/lv_cache.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/blend/lv_draw_sw_blend.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/blend/../../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../osal/lv_os_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../stdlib/builtin/lv_tlsf.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../stdlib/builtin/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../misc/lv_timer_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../misc/../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../misc/lv_anim_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../tick/lv_tick_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../tick/../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/lv_draw_buf_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/lv_draw_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/lv_draw_sw_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/lv_draw_sw.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/lv_draw_sw_mask_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../draw/sw/lv_draw_sw_mask.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../stdlib/builtin/lv_tlsf_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../stdlib/builtin/lv_tlsf.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../stdlib/builtin/../../osal/lv_os_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../debugging/sysmon/lv_sysmon_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../debugging/sysmon/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../debugging/test/lv_test_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../debugging/test/../../lvgl_public.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../layouts/lv_layout_private.h \
+ /home/hugo/Documentos/lumis/simulator/lvgl/src/libs/libjpeg_turbo/../../core/../layouts/../lvgl_public.h

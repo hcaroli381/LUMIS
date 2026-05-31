@@ -146707,6 +146707,57 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o: lvgl/src/l
   lvgl/include/lvgl/widgets/lv_tileview.h \
   lvgl/include/lvgl/widgets/lv_win.h \
   lvgl/src/lvgl_public.h \
+  lvgl/src/debugging/sysmon/lv_sysmon_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/debugging/test/lv_test_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/draw/lv_draw_buf_private.h \
+  lvgl/src/draw/lv_draw_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/misc/cache/lv_cache.h \
+  lvgl/src/misc/cache/lv_cache_entry.h \
+  lvgl/src/osal/lv_os_private.h \
+  lvgl/src/draw/lv_draw_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/draw/sw/blend/lv_draw_sw_blend.h \
+  lvgl/src/draw/sw/lv_draw_sw.h \
+  lvgl/src/draw/sw/lv_draw_sw_mask.h \
+  lvgl/src/draw/sw/lv_draw_sw_mask_private.h \
+  lvgl/src/draw/sw/lv_draw_sw_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/layouts/lv_layout_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/misc/lv_anim_private.h \
+  lvgl/src/misc/lv_timer_private.h \
+  lvgl/src/osal/lv_os_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/osal/lv_os_private.h \
+  lvgl/src/stdlib/builtin/lv_tlsf.h \
+  lvgl/src/stdlib/builtin/lv_tlsf_private.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/tick/lv_tick_private.h \
+  lvgl/src/core/lv_global.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/osal/lv_linux.h \
+  lvgl/src/osal/lv_os_none.h \
+  lvgl/src/osal/lv_os_private.h \
+  lvgl/src/misc/lv_iter_private.h \
+  lvgl/src/misc/cache/lv_cache.h \
+  lvgl/src/misc/cache/class/lv_cache_class.h \
+  lvgl/src/misc/cache/class/lv_cache_lru_ll.h \
+  lvgl/src/misc/cache/class/lv_cache_lru_rb.h \
+  lvgl/src/misc/cache/class/lv_cache_sc_da.h \
+  lvgl/src/lvgl_public.h \
+  lvgl/src/misc/lv_iter_private.h \
+  lvgl/src/misc/cache/lv_cache.h \
+  lvgl/src/misc/cache/instance/lv_image_cache.h \
+  lvgl/src/misc/cache/lv_cache.h \
+  lvgl/src/draw/lv_image_decoder_private.h \
+  lvgl/src/lvgl_public.h \
+  /usr/include/bits/floatn-common.h \
+  /usr/include/bits/floatn.h \
   /usr/include/bits/libc-header-start.h \
   /usr/include/bits/local_lim.h \
   /usr/include/bits/long-double.h \
@@ -146714,12 +146765,23 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o: lvgl/src/l
   /usr/include/bits/posix2_lim.h \
   /usr/include/bits/pthread_stack_min-dynamic.h \
   /usr/include/bits/pthread_stack_min.h \
+  /usr/include/bits/setjmp.h \
   /usr/include/bits/stdint-intn.h \
   /usr/include/bits/stdint-least.h \
   /usr/include/bits/stdint-uintn.h \
+  /usr/include/bits/stdio_lim.h \
   /usr/include/bits/time64.h \
   /usr/include/bits/timesize.h \
   /usr/include/bits/types.h \
+  /usr/include/bits/types/FILE.h \
+  /usr/include/bits/types/__FILE.h \
+  /usr/include/bits/types/__fpos64_t.h \
+  /usr/include/bits/types/__fpos_t.h \
+  /usr/include/bits/types/__mbstate_t.h \
+  /usr/include/bits/types/__sigset_t.h \
+  /usr/include/bits/types/cookie_io_functions_t.h \
+  /usr/include/bits/types/struct_FILE.h \
+  /usr/include/bits/types/struct___jmp_buf_tag.h \
   /usr/include/bits/typesizes.h \
   /usr/include/bits/wchar.h \
   /usr/include/bits/wordsize.h \
@@ -146728,10 +146790,16 @@ lvgl/CMakeFiles/lvgl.dir/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o: lvgl/src/l
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/inttypes.h \
+  /usr/include/jconfig.h \
+  /usr/include/jmorecfg.h \
+  /usr/include/jpegint.h \
+  /usr/include/jpeglib.h \
   /usr/include/limits.h \
   /usr/include/linux/limits.h \
+  /usr/include/setjmp.h \
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
+  /usr/include/stdio.h \
   /usr/include/sys/cdefs.h \
   /usr/lib/gcc/x86_64-redhat-linux/16/include/float.h \
   /usr/lib/gcc/x86_64-redhat-linux/16/include/limits.h \
@@ -219947,6 +220015,12 @@ lvgl/src/widgets/property/lv_buttonmatrix_properties.c:
 
 lvgl/src/widgets/property/lv_bar_properties.c:
 
+lvgl/src/widgets/property/lv_animimage_properties.c:
+
+lvgl/src/widgets/objx_templ/lv_objx_templ.c:
+
+lvgl/src/widgets/msgbox/lv_msgbox_private.h:
+
 lvgl/src/drivers/display/tft_espi/lv_tft_espi.cpp:
 
 /usr/include/bits/pthreadtypes-arch.h:
@@ -219976,6 +220050,12 @@ lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565_swapped.c:
 lvgl/src/draw/vg_lite/lv_vg_lite_bitmap_font_cache.c:
 
 lvgl/src/core/lv_obj_style.c:
+
+lvgl/src/widgets/msgbox/lv_msgbox.c:
+
+/usr/include/SDL2/SDL_shape.h:
+
+lvgl/src/draw/vg_lite/lv_draw_vg_lite_layer.c:
 
 lvgl/src/widgets/lottie/lv_lottie_private.h:
 
@@ -220233,6 +220313,10 @@ lvgl/src/draw/eve/lv_draw_eve_fill.c:
 
 lvgl/src/draw/sw/lv_draw_sw_grad.c:
 
+lvgl/src/widgets/menu/lv_menu_private.h:
+
+/usr/include/bits/unistd_ext.h:
+
 lvgl/src/draw/dma2d/lv_draw_dma2d_private.h:
 
 lvgl/src/draw/convert/lv_draw_buf_convert.h:
@@ -220272,10 +220356,6 @@ lvgl/src/draw/nanovg/lv_draw_nanovg_triangle.c:
 lvgl/src/core/lv_obj_id_builtin.c:
 
 lvgl/src/stdlib/clib/lv_string_clib.c:
-
-lvgl/src/widgets/switch/lv_switch.c:
-
-lvgl/src/core/lv_obj_event_private.h:
 
 lvgl/src/widgets/line/lv_line_private.h:
 
@@ -220414,8 +220494,6 @@ lvgl/include/lvgl/drivers/sdl/lv_sdl_window.h:
 lvgl/include/lvgl/drivers/display/lv_st7796.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/include/avx512vnniintrin.h:
-
-lvgl/src/widgets/msgbox/lv_msgbox_private.h:
 
 /usr/include/bits/posix2_lim.h:
 
@@ -220629,6 +220707,8 @@ lvgl/src/draw/nxp/g2d/lv_draw_g2d_fill.c:
 
 lvgl/include/lvgl/core/lv_obj_event.h:
 
+/usr/include/jmorecfg.h:
+
 lvgl/src/drivers/uefi/lv_uefi_indev_pointer.c:
 
 lvgl/src/draw/vg_lite/lv_draw_vg_lite_triangle.c:
@@ -220766,6 +220846,8 @@ lvgl/include/lvgl/core/lv_style_properties.h:
 lvgl/src/libs/gltf/gltf_data/lv_gltf_data_texture.cpp:
 
 /usr/include/math.h:
+
+/usr/include/setjmp.h:
 
 lvgl/src/draw/nxp/pxp/lv_pxp_osa.h:
 
@@ -221077,6 +221159,8 @@ lvgl/include/lvgl/stdlib/lv_string.h:
 
 lvgl/src/drivers/display/lcd/lv_lcd_generic_mipi.c:
 
+/usr/include/jpeglib.h:
+
 lvgl/src/drivers/libinput/lv_xkb_private.h:
 
 /usr/include/bits/pthread_stack_min-dynamic.h:
@@ -221104,10 +221188,6 @@ lvgl/include/lvgl/widgets/lv_calendar.h:
 /usr/lib/gcc/x86_64-redhat-linux/16/include/clflushoptintrin.h:
 
 lvgl/src/widgets/checkbox/lv_checkbox.c:
-
-/usr/include/bits/unistd_ext.h:
-
-lvgl/src/widgets/menu/lv_menu_private.h:
 
 lvgl/include/lvgl/widgets/lv_chart.h:
 
@@ -221357,8 +221437,6 @@ lvgl/include/lvgl/widgets/lv_label.h:
 
 /usr/include/SDL2/SDL_events.h:
 
-lvgl/src/widgets/property/lv_animimage_properties.c:
-
 /usr/include/SDL2/SDL_filesystem.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/include/gfniintrin.h:
@@ -221404,8 +221482,6 @@ lvgl/src/draw/sw/blend/neon/lv_draw_sw_blend_neon_to_rgb888.h:
 /usr/include/SDL2/SDL_platform.h:
 
 /usr/include/SDL2/SDL_power.h:
-
-lvgl/src/widgets/objx_templ/lv_objx_templ.c:
 
 lvgl/src/drivers/x11/lv_x11_input.c:
 
@@ -221487,6 +221563,12 @@ lvgl/src/libs/lodepng/lv_lodepng.c:
 
 /usr/include/ctype.h:
 
+lvgl/src/widgets/property/lv_table_properties.c:
+
+lvgl/src/widgets/menu/lv_menu.c:
+
+/usr/include/endian.h:
+
 lvgl/src/osal/lv_linux.h:
 
 /usr/include/stdio.h:
@@ -221541,6 +221623,10 @@ lvgl/src/widgets/arclabel/lv_arclabel.c:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/include/avx512bitalgvlintrin.h:
 
+lvgl/src/widgets/property/lv_arc_properties.c:
+
+/usr/lib/gcc/x86_64-redhat-linux/16/include/avx512bmmintrin.h:
+
 lvgl/src/drivers/display/fb/lv_linux_fbdev.c:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/include/avx512bwintrin.h:
@@ -221576,10 +221662,6 @@ lvgl/src/misc/cache/lv_cache_entry_private.h:
 lvgl/include/lvgl/drivers/wayland/lv_wayland_window.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/include/avx512vpopcntdqvlintrin.h:
-
-/usr/lib/gcc/x86_64-redhat-linux/16/include/avx512bmmintrin.h:
-
-lvgl/src/widgets/property/lv_arc_properties.c:
 
 lvgl/src/stdlib/builtin/lv_tlsf.h:
 
@@ -221939,6 +222021,20 @@ lvgl/src/libs/gstreamer/lv_gstreamer_internal.h:
 
 lvgl/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c:
 
+/usr/include/bits/setjmp.h:
+
+lvgl/src/widgets/switch/lv_switch.c:
+
+lvgl/src/core/lv_obj_event_private.h:
+
+/usr/include/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/jconfig.h:
+
+/usr/include/jpegint.h:
+
+lvgl/src/themes/mono/lv_theme_mono.c:
+
 lvgl/src/libs/lodepng/lodepng.c:
 
 lvgl/src/draw/nanovg/lv_draw_nanovg.h:
@@ -222093,19 +222189,11 @@ lvgl/include/lvgl/themes/lv_theme_simple.h:
 
 lvgl/src/themes/default/lv_theme_default.c:
 
-lvgl/src/themes/mono/lv_theme_mono.c:
-
 lvgl/src/misc/lv_color_op.c:
 
 lvgl/src/themes/simple/lv_theme_simple.c:
 
 lvgl/src/widgets/3dtexture/lv_3dtexture.c:
-
-lvgl/src/widgets/property/lv_table_properties.c:
-
-/usr/include/endian.h:
-
-lvgl/src/widgets/menu/lv_menu.c:
 
 lvgl/src/widgets/3dtexture/lv_3dtexture_private.h:
 
@@ -222180,9 +222268,3 @@ lvgl/src/widgets/led/lv_led_private.h:
 lvgl/include/lvgl/layouts/lv_layout.h:
 
 lvgl/src/widgets/lottie/lv_lottie.c:
-
-/usr/include/SDL2/SDL_shape.h:
-
-lvgl/src/draw/vg_lite/lv_draw_vg_lite_layer.c:
-
-lvgl/src/widgets/msgbox/lv_msgbox.c:

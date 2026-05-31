@@ -1480,6 +1480,11 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o: /ho
   lvgl/include/lvgl/widgets/lv_tileview.h \
   lvgl/include/lvgl/widgets/lv_win.h \
   /home/hugo/Documentos/lumis/src/screens/clock_screen.h \
+  /usr/include/alloca.h \
+  /usr/include/bits/atomic_wide_counter.h \
+  /usr/include/bits/byteswap.h \
+  /usr/include/bits/dirent.h \
+  /usr/include/bits/dirent_ext.h \
   /usr/include/bits/endian.h \
   /usr/include/bits/endianness.h \
   /usr/include/bits/floatn-common.h \
@@ -1491,10 +1496,17 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o: /ho
   /usr/include/bits/posix2_lim.h \
   /usr/include/bits/pthread_stack_min-dynamic.h \
   /usr/include/bits/pthread_stack_min.h \
+  /usr/include/bits/pthreadtypes-arch.h \
+  /usr/include/bits/pthreadtypes.h \
+  /usr/include/bits/select.h \
   /usr/include/bits/stdint-intn.h \
   /usr/include/bits/stdint-least.h \
   /usr/include/bits/stdint-uintn.h \
   /usr/include/bits/stdio_lim.h \
+  /usr/include/bits/stdlib-float.h \
+  /usr/include/bits/struct_mutex.h \
+  /usr/include/bits/struct_rwlock.h \
+  /usr/include/bits/thread-shared-types.h \
   /usr/include/bits/time.h \
   /usr/include/bits/time64.h \
   /usr/include/bits/timesize.h \
@@ -1505,19 +1517,27 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o: /ho
   /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__locale_t.h \
   /usr/include/bits/types/__mbstate_t.h \
+  /usr/include/bits/types/__sigset_t.h \
   /usr/include/bits/types/clock_t.h \
   /usr/include/bits/types/clockid_t.h \
   /usr/include/bits/types/cookie_io_functions_t.h \
   /usr/include/bits/types/locale_t.h \
+  /usr/include/bits/types/sigset_t.h \
   /usr/include/bits/types/struct_FILE.h \
   /usr/include/bits/types/struct_itimerspec.h \
   /usr/include/bits/types/struct_timespec.h \
+  /usr/include/bits/types/struct_timeval.h \
   /usr/include/bits/types/struct_tm.h \
   /usr/include/bits/types/time_t.h \
   /usr/include/bits/types/timer_t.h \
   /usr/include/bits/typesizes.h \
+  /usr/include/bits/uintn-identity.h \
+  /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h \
   /usr/include/bits/wchar.h \
   /usr/include/bits/wordsize.h \
+  /usr/include/dirent.h \
+  /usr/include/endian.h \
   /usr/include/features-time64.h \
   /usr/include/features.h \
   /usr/include/gnu/stubs-64.h \
@@ -1528,7 +1548,12 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o: /ho
   /usr/include/stdc-predef.h \
   /usr/include/stdint.h \
   /usr/include/stdio.h \
+  /usr/include/stdlib.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
   /usr/include/sys/cdefs.h \
+  /usr/include/sys/select.h \
+  /usr/include/sys/types.h \
   /usr/include/time.h \
   /usr/lib/gcc/x86_64-redhat-linux/16/include/float.h \
   /usr/lib/gcc/x86_64-redhat-linux/16/include/limits.h \
@@ -1798,6 +1823,7 @@ bin/main: /lib64/ld-linux-x86-64.so.2 \
   /usr/lib64/crti.o \
   /usr/lib64/crtn.o \
   /usr/lib64/libc.so \
+  /usr/lib64/libjpeg.so \
   /usr/lib64/libm.so \
   /usr/lib64/libpthread.a \
   /usr/lib/gcc/x86_64-redhat-linux/16/crtbegin.o \
@@ -1883,6 +1909,14 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/main.c.o:
 
 /usr/include/time.h:
 
+/usr/include/sys/types.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/uintn-identity.h:
+
 /usr/include/bits/types/timer_t.h:
 
 /usr/include/bits/types/time_t.h:
@@ -1890,6 +1924,8 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/main.c.o:
 /usr/include/bits/types/struct_tm.h:
 
 /usr/include/bits/types/struct_itimerspec.h:
+
+/usr/include/bits/types/sigset_t.h:
 
 /usr/include/bits/types/locale_t.h:
 
@@ -1907,9 +1943,21 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o:
 
 /usr/include/bits/time.h:
 
+/usr/include/bits/struct_rwlock.h:
+
 /usr/include/bits/stdio_lim.h:
 
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
+
 /usr/include/bits/floatn-common.h:
+
+/usr/include/bits/dirent.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/atomic_wide_counter.h:
 
 /home/hugo/Documentos/lumis/src/screens/Minecraft16.c:
 
@@ -1925,11 +1973,15 @@ lvgl/include/lvgl/drivers/wayland/lv_wayland_touch.h:
 
 lvgl/include/lvgl/core/lv_matrix.h:
 
+/usr/include/bits/stdlib-float.h:
+
 lvgl/include/lvgl/drivers/wayland/lv_wayland_pointer_axis.h:
 
 lvgl/include/lvgl/api_map/lv_api_map_v9_1.h:
 
 lvgl/include/lvgl/drivers/wayland/lv_wayland_keyboard.h:
+
+/usr/include/bits/struct_mutex.h:
 
 lvgl/include/lvgl/api_map/lv_api_map_v9_3.h:
 
@@ -1947,6 +1999,8 @@ lvgl/include/lvgl/widgets/lv_dropdown.h:
 
 lvgl/include/lvgl/drivers/uefi/lv_uefi_edk2.h:
 
+/usr/include/bits/waitflags.h:
+
 lvgl/include/lvgl/widgets/lv_list.h:
 
 lvgl/include/lvgl/drivers/uefi/lv_uefi_display.h:
@@ -1959,9 +2013,13 @@ lvgl/include/lvgl/drivers/ffmpeg/lv_ffmpeg.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/16/libgcc_s.so:
 
+/usr/include/bits/waitstatus.h:
+
 /usr/include/bits/wchar.h:
 
 lvgl/include/lvgl/drivers/sdl/lv_sdl_mouse.h:
+
+/usr/include/bits/thread-shared-types.h:
 
 lvgl/include/lvgl/widgets/lv_switch.h:
 
@@ -1970,6 +2028,8 @@ lvgl/include/lvgl/widgets/lv_textarea.h:
 lvgl/include/lvgl/image/lv_libwebp.h:
 
 /usr/include/bits/types.h:
+
+/usr/include/bits/types/__sigset_t.h:
 
 lvgl/include/lvgl/drivers/opengles/lv_opengles_texture.h:
 
@@ -1995,6 +2055,8 @@ lvgl/include/lvgl/drivers/display/lv_lovyan_gfx.h:
 
 lvgl/include/lvgl/stdlib/lv_string.h:
 
+/usr/include/alloca.h:
+
 lvgl/include/lvgl/drivers/display/lv_st7789.h:
 
 lvgl/include/lvgl/debugging/lv_test_indev_gesture.h:
@@ -2016,6 +2078,8 @@ lvgl/include/lvgl/widgets/lv_spinbox.h:
 lvgl/include/lvgl/widgets/lv_tabview.h:
 
 lvgl/include/lvgl/draw/sw/lv_draw_sw_utils.h:
+
+/usr/include/strings.h:
 
 lvgl/include/lvgl/drivers/indev/lv_evdev.h:
 
@@ -2119,6 +2183,8 @@ lvgl/include/lvgl/draw/lv_draw_vector.h:
 
 lvgl/include/lvgl/3d/lv_gltf_model.h:
 
+/usr/include/bits/select.h:
+
 lvgl/include/lvgl/drivers/display/lv_linux_drm.h:
 
 lvgl/include/lvgl/core/lv_style.h:
@@ -2178,6 +2244,8 @@ lvgl/include/lvgl/draw/lv_palette.h:
 /usr/lib64/libSDL2-2.0.so.0.3200.68:
 
 lvgl/include/lvgl/core/lv_obj_style_gen.h:
+
+/usr/include/dirent.h:
 
 lvgl/include/lvgl/api_map/lv_api_map_v9_2.h:
 
@@ -2317,6 +2385,8 @@ lvgl/include/lvgl/misc/lv_array.h:
 
 lvgl/include/lvgl/misc/lv_async.h:
 
+/usr/include/string.h:
+
 lvgl/include/lvgl/misc/lv_ll.h:
 
 /usr/include/bits/libc-header-start.h:
@@ -2349,6 +2419,8 @@ lvgl/include/lvgl/widgets/lv_arclabel.h:
 
 lvgl/include/lvgl/widgets/lv_button.h:
 
+/usr/include/endian.h:
+
 /usr/include/stdint.h:
 
 lvgl/include/lvgl/widgets/lv_buttonmatrix.h:
@@ -2379,6 +2451,8 @@ lvgl/include/lvgl/widgets/lv_led.h:
 
 lvgl/include/lvgl/widgets/lv_line.h:
 
+/usr/include/bits/types/struct_timeval.h:
+
 lvgl/include/lvgl/widgets/lv_menu.h:
 
 lvgl/include/lvgl/widgets/lv_msgbox.h:
@@ -2406,6 +2480,8 @@ lvgl/include/lvgl/widgets/lv_tileview.h:
 lvgl/include/lvgl/config/lv_conf_internal.h:
 
 /usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/dirent_ext.h:
 
 lvgl/include/lvgl/widgets/lv_win.h:
 
@@ -2440,6 +2516,8 @@ lvgl/include/lvgl/drivers/nuttx/lv_nuttx_fbdev.h:
 /usr/lib/gcc/x86_64-redhat-linux/16/include/stdbool.h:
 
 /usr/include/bits/wordsize.h:
+
+/usr/lib64/libjpeg.so:
 
 /usr/include/features-time64.h:
 

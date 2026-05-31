@@ -1027,7 +1027,7 @@
 
 /** libjpeg-turbo decoder library.
  *  - Supports complete JPEG specifications and high-performance JPEG decoding. */
-#define LV_USE_LIBJPEG_TURBO 0
+#define LV_USE_LIBJPEG_TURBO 1
 
 /** WebP decoder library */
 #define LV_USE_LIBWEBP 0
