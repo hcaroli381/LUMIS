@@ -194,49 +194,70 @@ int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg)
             unsigned char encoding = apic[0];
             long offset = 1;
 
+            // 1. Saltar el MIME Type (ej: "image/jpeg")
             char mime[64] = "";
             int mi = 0;
             while (offset < apic_size && apic[offset] != '\0' && mi < 63)
                 mime[mi++] = apic[offset++];
             mime[mi] = '\0';
-            offset++;
+            offset++; // Saltar el byte nulo terminador del MIME
 
-            unsigned char pic_type = apic[offset++];
-
-            if (encoding == 1 || encoding == 2)
+            // 2. Saltar el Picture Type (1 byte)
+            if (offset < apic_size)
             {
-                while (offset < apic_size - 1 && !(apic[offset] == 0x00 && apic[offset + 1] == 0x00))
-                    offset += 2;
-                offset += 2;
-            }
-            else
-            {
-                while (offset < apic_size && apic[offset] != '\0')
-                    offset++;
                 offset++;
             }
 
-            long imagen_size = apic_size - offset;
-            if (imagen_size > 0)
+            // 3. Saltar la Descripción según el tipo de codificación de texto
+            if (encoding == 1 || encoding == 2) // UTF-16
             {
+                while (offset < apic_size - 1 && !(apic[offset] == 0x00 && apic[offset + 1] == 0x00))
+                    offset += 2;
+                offset += 2; // Saltar el doble nulo
+            }
+            else // UTF-8 o ISO-8859-1
+            {
+                while (offset < apic_size && apic[offset] != '\0')
+                    offset++;
+                offset++; // Saltar el byte nulo
+            }
+
+            // 4. Buscar el inicio real de la imagen JPEG (Marcador FF D8)
+            long jpg_start = -1;
+            for (long i = offset; i < apic_size - 1; i++)
+            {
+                if (apic[i] == 0xFF && apic[i + 1] == 0xD8)
+                {
+                    jpg_start = i;
+                    break;
+                }
+            }
+
+            // 5. Encontrar el final real (FF D9) buscando hacia atrás para dejar fuera el padding
+            if (jpg_start >= 0)
+            {
+                long jpg_end = apic_size;
+
+                // Recorremos hacia atrás desde el final del frame, pero nos detenemos en el inicio del JPG
+                for (long i = apic_size - 2; i >= jpg_start; i--)
+                {
+                    if (apic[i] == 0xFF && apic[i + 1] == 0xD9)
+                    {
+                        jpg_end = i + 2; // El archivo termina justo tras el marcador D9
+                        break;
+                    }
+                }
+
+                // 6. Volcar al disco únicamente los bytes de la imagen limpia
                 FILE *out = fopen(ruta_salida_jpg, "wb");
                 if (out)
                 {
-                    long real_size = imagen_size;
-                    for (long j = imagen_size - 2; j >= 0; j--)
-                    {
-                        if (apic[offset + j] == 0xFF && apic[offset + j + 1] == 0xD9)
-                        {
-                            real_size = j + 2; // incluimos el propio FF D9
-                            break;
-                        }
-                    }
-                    fwrite(apic + offset, 1, real_size, out);
+                    fwrite(apic + jpg_start, 1, jpg_end - jpg_start, out);
                     fclose(out);
                     encontrado = 1;
                 }
             }
-            break;
+            break; // Salimos del bucle al procesar la carátula
         }
 
         pos += 10 + frame_size;

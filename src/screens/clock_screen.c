@@ -402,6 +402,8 @@ void clock_screen_create(void)
     lv_obj_set_style_radius(caja_foto_mp3, 12, 0);
     lv_obj_set_style_border_width(caja_foto_mp3, 4, 0);
     lv_obj_set_style_border_color(caja_foto_mp3, COLOR_CAJA_HORA, 0); // Borde dorado
+    // Desactiva el scroll para que el cuadro de la foto se quede rígido y no se desplace
+    lv_obj_clear_flag(caja_foto_mp3, LV_OBJ_FLAG_SCROLLABLE);
 
     // Icono musical dentro de la foto
     // 1. Icono musical dentro de la foto (usando la variable global)
