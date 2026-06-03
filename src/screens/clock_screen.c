@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../utils/alarma.h"
 
 // fuentes
 LV_FONT_DECLARE(Minecraft48);
@@ -12,7 +13,7 @@ LV_FONT_DECLARE(Minecraft16);
 LV_FONT_DECLARE(Minecraft24);
 LV_IMG_DECLARE(lumisAssistant);
 
-// ─── PALETA DE COLORES PIXEL ART ─────────────────
+// Paleta de colores (pixel art)
 #define COLOR_FONDO lv_color_hex(0xF4ECCF)
 #define COLOR_BORDE_RETRO lv_color_hex(0x2C2C2C)
 #define COLOR_CAJA_HORA lv_color_hex(0xD2A14E)
@@ -40,11 +41,6 @@ static lv_obj_t *label_info_alarma_principal = NULL; // El texto pequeñito al l
 // Estas guardan la hora que estás "editando" con los botones + y -
 static int edit_hora = 7;
 static int edit_min = 30;
-
-// Estas guardan la hora REAL confirmada que hará sonar el despertador
-static int alarma_confirmada_hora = 0;
-static int alarma_confirmada_min = 0;
-static bool alarma_activa = false; // Nos dice si hay una alarma puesta o no
 
 static void cargar_cancion_de_carpeta(void);
 static void _actualizar_reloj(lv_timer_t *timer)
@@ -83,9 +79,9 @@ static void cb_cambiar_modo(lv_event_t *e)
     else if (modo_actual == 2)
         lv_label_set_text(label_modo, "Lata34");
 
-    // ── AÑADE ESTAS DOS LÍNEAS JUSTO AQUÍ ABAJO ──
-    indice_cancion_actual = 0;   // Forzamos a que empiece en la primera canción de la nueva lista
-    cargar_cancion_de_carpeta(); // Forzamos a que lea la carpeta inmediatamente al cambiar
+    // Reiniciar índice y recargar lista al cambiar modo
+    indice_cancion_actual = 0;
+    cargar_cancion_de_carpeta();
 }
 
 static void cb_toggle_despertador(lv_event_t *e)
@@ -124,330 +120,34 @@ static void cb_modificar_alarma(lv_event_t *e)
     _actualizar_texto_alarma_temporal();
 }
 
-// ── NÚCLEO: EVENTO DE CONFIRMACIÓN ──
+// Evento: confirmar alarma
 static void cb_confirmar_alarma(lv_event_t *e)
 {
-    // 1. Traspasamos la hora editada a la alarma real del sistema
-    alarma_confirmada_hora = edit_hora;
-    alarma_confirmada_min = edit_min;
-    alarma_activa = true;
+    // Aplicamos la alarma mediante el módulo de alarma
+    alarma_set(edit_hora, edit_min);
 
-    // 2. Pintamos el texto pequeño al lado del reloj principal
+    // Actualizamos el texto de la interfaz
     char buf[20];
-    snprintf(buf, sizeof(buf), "ALARM: %02d:%02d", alarma_confirmada_hora, alarma_confirmada_min);
+    snprintf(buf, sizeof(buf), "ALARM: %02d:%02d", edit_hora, edit_min);
     lv_label_set_text(label_info_alarma_principal, buf);
 
-    // 3. Ocultamos el panel
+    // Ocultamos el panel de edición
     lv_obj_add_flag(panel_despertador, LV_OBJ_FLAG_HIDDEN);
-    printf("[SISTEMA] Alarma fijada con éxito a las %02d:%02d\n", alarma_confirmada_hora, alarma_confirmada_min);
+    printf("[SISTEMA] Alarma fijada con éxito a las %02d:%02d\n", edit_hora, edit_min);
 }
 static void cb_borrar_alarma(lv_event_t *e)
 {
-    // 1. Apagamos el interruptor de la alarma
-    alarma_activa = false;
-
-    // 2. Volvemos a poner el texto pequeñito de la pantalla principal en OFF
+    alarma_clear();
     lv_label_set_text(label_info_alarma_principal, "ALARM: OFF");
-
-    // 3. Cerramos el panel para volver a la pantalla principal
     lv_obj_add_flag(panel_despertador, LV_OBJ_FLAG_HIDDEN);
-
     printf("[SISTEMA] Alarma borrada por el usuario.\n");
 }
 
 #include <string.h>
+#include "../utils/audio.h"
 
-// Función para obtener la duración real de un MP3 leyendo sus bytes de cabecera
-static int obtener_duracion_mp3(const char *ruta_archivo)
-{
-    FILE *f = fopen(ruta_archivo, "rb");
-    if (!f)
-        return 180;
-
-    // 1. Saltamos el tag ID3v2
-    long offset_audio = 0;
-    unsigned char cabecera[10];
-    if (fread(cabecera, 1, 10, f) == 10)
-    {
-        if (cabecera[0] == 'I' && cabecera[1] == 'D' && cabecera[2] == '3')
-        {
-            long tag_size = ((cabecera[6] & 0x7F) << 21) |
-                            ((cabecera[7] & 0x7F) << 14) |
-                            ((cabecera[8] & 0x7F) << 7) |
-                            (cabecera[9] & 0x7F);
-            offset_audio = 10 + tag_size;
-        }
-    }
-
-    static const int tabla_bitrates[] = {0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0};
-    static const int tabla_samplerate[] = {44100, 48000, 32000, 0};
-
-    // 2. Leemos el primer frame MPEG
-    fseek(f, offset_audio, SEEK_SET);
-    unsigned char frame[4];
-    long pos = offset_audio;
-    int encontrado = 0;
-    int samplerate = 44100;
-    int canales = 2;
-
-    for (int i = 0; i < 32768; i++)
-    {
-        fseek(f, pos, SEEK_SET);
-        if (fread(frame, 1, 4, f) < 4)
-            break;
-
-        if (frame[0] == 0xFF && (frame[1] & 0xE0) == 0xE0)
-        {
-            int version = (frame[1] >> 3) & 0x03;
-            int layer = (frame[1] >> 1) & 0x03;
-            int idx_sr = (frame[2] >> 2) & 0x03;
-            int modo = (frame[3] >> 6) & 0x03; // 3 = mono
-
-            if (version == 3 && layer == 1 && idx_sr < 3)
-            {
-                samplerate = tabla_samplerate[idx_sr];
-                canales = (modo == 3) ? 1 : 2;
-                encontrado = 1;
-                break;
-            }
-        }
-        pos++;
-    }
-
-    if (!encontrado)
-    {
-        fclose(f);
-        return 180;
-    }
-
-    // 3. Buscamos el header Xing/Info dentro del primer frame
-    //    Offset desde inicio del frame: 4 bytes header + side_info
-    //    Side info: 32 bytes stereo, 17 bytes mono (MPEG1)
-    int side_info_size = (canales == 1) ? 17 : 32;
-    long xing_offset = pos + 4 + side_info_size;
-
-    fseek(f, xing_offset, SEEK_SET);
-    unsigned char xing_buf[120];
-    int xing_leidos = (int)fread(xing_buf, 1, sizeof(xing_buf), f);
-
-    // Buscamos "Xing" o "Info" en los primeros bytes
-    int xing_pos = -1;
-    for (int i = 0; i <= xing_leidos - 4; i++)
-    {
-        if ((memcmp(xing_buf + i, "Xing", 4) == 0) ||
-            (memcmp(xing_buf + i, "Info", 4) == 0))
-        {
-            xing_pos = i;
-            printf("[DURACION] Header %c%c%c%c encontrado!\n",
-                   xing_buf[i], xing_buf[i + 1], xing_buf[i + 2], xing_buf[i + 3]);
-            break;
-        }
-    }
-
-    if (xing_pos >= 0 && xing_pos + 8 <= xing_leidos)
-    {
-        unsigned char *x = xing_buf + xing_pos;
-        unsigned long flags = ((unsigned long)x[4] << 24) | ((unsigned long)x[5] << 16) |
-                              ((unsigned long)x[6] << 8) | (unsigned long)x[7];
-
-        if (flags & 0x01) // Bit 0 = tiene número de frames
-        {
-            unsigned long num_frames = ((unsigned long)x[8] << 24) |
-                                       ((unsigned long)x[9] << 16) |
-                                       ((unsigned long)x[10] << 8) |
-                                       (unsigned long)x[11];
-
-            // 1152 muestras por frame en MPEG1 Layer III
-            int duracion = (int)((double)num_frames * 1152.0 / samplerate);
-            printf("[DURACION] Xing: %lu frames → %d seg (%d:%02d)\n",
-                   num_frames, duracion, duracion / 60, duracion % 60);
-            fclose(f);
-            return duracion > 0 ? duracion : 180;
-        }
-    }
-
-    // 4. Fallback: si no hay Xing, usamos tamaño + bitrate del frame
-    printf("[DURACION] Sin Xing, calculando por tamaño...\n");
-    int idx_br = (frame[2] >> 4) & 0x0F;
-    int bitrate_kbps = tabla_bitrates[idx_br];
-
-    fseek(f, 0, SEEK_END);
-    long tamano_audio = ftell(f) - offset_audio;
-    fclose(f);
-
-    if (bitrate_kbps >= 32 && bitrate_kbps <= 320)
-    {
-        int duracion = (int)((tamano_audio * 8L) / ((long)bitrate_kbps * 1000L));
-        printf("[DURACION] Bitrate frame: %d kbps → %d seg (%d:%02d)\n",
-               bitrate_kbps, duracion, duracion / 60, duracion % 60);
-        return duracion > 0 ? duracion : 180;
-    }
-
-    return (int)(tamano_audio / 24000); // último fallback 192kbps
-}
-// Función PRO para extraer el JPG oculto dentro del archivo MP3
-// ─── EXTRAE LA CARÁTULA (APIC) DE UN ID3v2 ─────────────────────────────────
-// Devuelve 1 si tuvo éxito, 0 si no hay carátula.
-static int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg)
-{
-    printf("[DEBUG] Abriendo: %s\n", ruta_mp3);
-    FILE *f = fopen(ruta_mp3, "rb");
-    if (!f)
-    {
-        printf("[DEBUG] ERROR: No pude abrir el archivo\n");
-        return 0;
-    }
-
-    unsigned char header[10];
-    if (fread(header, 1, 10, f) < 10)
-    {
-        fclose(f);
-        printf("[DEBUG] ERROR: No pude leer 10 bytes de cabecera\n");
-        return 0;
-    }
-
-    printf("[DEBUG] Primeros 3 bytes: %c%c%c (version %d.%d)\n",
-           header[0], header[1], header[2], header[3], header[4]);
-
-    if (header[0] != 'I' || header[1] != 'D' || header[2] != '3')
-    {
-        // ── Puede que el MP3 NO tenga ID3v2 al principio.
-        // Algunos editores ponen el tag ID3v2 AL FINAL del archivo.
-        printf("[DEBUG] No hay ID3v2 al principio. Buscando al final...\n");
-
-        fseek(f, -128, SEEK_END);
-        unsigned char id3v1[3];
-        fread(id3v1, 1, 3, f);
-        if (id3v1[0] == 'T' && id3v1[1] == 'A' && id3v1[2] == 'G')
-            printf("[DEBUG] Tiene ID3v1 al final (no contiene carátula)\n");
-        else
-            printf("[DEBUG] Sin ningún tag ID3 reconocido\n");
-
-        fclose(f);
-        return 0;
-    }
-
-    int version_mayor = header[3];
-    long tag_size = ((header[6] & 0x7F) << 21) |
-                    ((header[7] & 0x7F) << 14) |
-                    ((header[8] & 0x7F) << 7) |
-                    (header[9] & 0x7F);
-
-    printf("[DEBUG] ID3v2.%d detectado. Tamaño del tag: %ld bytes\n", version_mayor, tag_size);
-
-    unsigned char *tag_data = (unsigned char *)malloc(tag_size);
-    if (!tag_data)
-    {
-        fclose(f);
-        printf("[DEBUG] ERROR: malloc falló\n");
-        return 0;
-    }
-
-    long leidos = (long)fread(tag_data, 1, tag_size, f);
-    fclose(f);
-    printf("[DEBUG] Bytes leídos del tag: %ld\n", leidos);
-
-    // ── Listamos TODOS los frames encontrados ──────────────────────────────
-    long pos = 0;
-    int encontrado = 0;
-
-    printf("[DEBUG] Frames encontrados:\n");
-    while (pos < tag_size - 10)
-    {
-        char frame_id[5];
-        memcpy(frame_id, tag_data + pos, 4);
-        frame_id[4] = '\0';
-
-        // Si el frame_id empieza por \0 es padding, fin del tag
-        if (frame_id[0] == '\0')
-            break;
-
-        long frame_size;
-        if (version_mayor == 4)
-            frame_size = ((tag_data[pos + 4] & 0x7F) << 21) |
-                         ((tag_data[pos + 5] & 0x7F) << 14) |
-                         ((tag_data[pos + 6] & 0x7F) << 7) |
-                         (tag_data[pos + 7] & 0x7F);
-        else
-            frame_size = ((long)tag_data[pos + 4] << 24) |
-                         ((long)tag_data[pos + 5] << 16) |
-                         ((long)tag_data[pos + 6] << 8) |
-                         (long)tag_data[pos + 7];
-
-        printf("[DEBUG]   Frame: '%s'  tamaño: %ld\n", frame_id, frame_size);
-
-        if (frame_size <= 0 || pos + 10 + frame_size > tag_size)
-            break;
-
-        if (strcmp(frame_id, "APIC") == 0)
-        {
-            unsigned char *apic = tag_data + pos + 10;
-            long apic_size = frame_size;
-
-            unsigned char encoding = apic[0];
-            printf("[DEBUG] APIC encontrado! Encoding: %d\n", encoding);
-
-            long offset = 1;
-
-            // Leemos MIME type para saber qué formato es
-            char mime[64] = "";
-            int mi = 0;
-            while (offset < apic_size && apic[offset] != '\0' && mi < 63)
-                mime[mi++] = apic[offset++];
-            mime[mi] = '\0';
-            offset++; // \0 del mime
-
-            unsigned char pic_type = apic[offset++];
-            printf("[DEBUG] MIME: '%s'  Tipo imagen: %d\n", mime, pic_type);
-
-            // Saltamos descripción (respetando encoding UTF-16 con \0\0)
-            if (encoding == 1 || encoding == 2) // UTF-16
-            {
-                while (offset < apic_size - 1 &&
-                       !(apic[offset] == 0x00 && apic[offset + 1] == 0x00))
-                    offset += 2;
-                offset += 2;
-            }
-            else // Latin-1 o UTF-8
-            {
-                while (offset < apic_size && apic[offset] != '\0')
-                    offset++;
-                offset++;
-            }
-
-            long imagen_size = apic_size - offset;
-            printf("[DEBUG] Offset imagen: %ld  Tamaño imagen: %ld bytes\n", offset, imagen_size);
-            printf("[DEBUG] Primeros bytes imagen: %02X %02X %02X %02X\n",
-                   apic[offset], apic[offset + 1], apic[offset + 2], apic[offset + 3]);
-
-            if (imagen_size > 0)
-            {
-                printf("[DEBUG] Escribiendo en: %s\n", ruta_salida_jpg);
-                FILE *out = fopen(ruta_salida_jpg, "wb");
-                if (!out)
-                {
-                    printf("[DEBUG] ERROR: No pude crear el archivo de salida\n");
-                }
-                else
-                {
-                    fwrite(apic + offset, 1, imagen_size, out);
-                    fclose(out);
-                    printf("[DEBUG] ¡Carátula guardada OK! (%ld bytes)\n", imagen_size);
-                    encontrado = 1;
-                }
-            }
-            break;
-        }
-
-        pos += 10 + frame_size;
-    }
-
-    if (!encontrado)
-        printf("[DEBUG] No se encontró frame APIC en el tag\n");
-
-    free(tag_data);
-    return encontrado;
-}
+// Se han extraído las funciones de análisis MP3 a src/utils/audio.c
+// Comentarios esenciales: `obtener_duracion_mp3` y `extraer_caratula_mp3` disponibles.
 
 static void cargar_cancion_de_carpeta(void)
 {
@@ -464,7 +164,7 @@ static void cargar_cancion_de_carpeta(void)
     DIR *dir = opendir(ruta_carpeta);
     if (dir == NULL)
     {
-        // ── AÑADE ESTAS DOS LÍNEAS DE CONTROL AQUÍ ──
+        // Control de error al abrir carpeta SD
         printf("[SD] ERROR al abrir la carpeta: %s\n", ruta_carpeta);
         perror("[SD] Motivo del fallo");
 
@@ -509,7 +209,7 @@ static void cargar_cancion_de_carpeta(void)
     {
         lv_label_set_text(label_cancion, nombre_encontrado);
 
-        // ── AQUÍ CALCULAMOS LA DURACIÓN REAL AUTOMÁTICAMENTE ──
+        // Calcula la duración real del MP3 seleccionado
         char ruta_completa[256];
         snprintf(ruta_completa, sizeof(ruta_completa), "%s/%s", ruta_carpeta, nombre_encontrado);
         cancion_segundos_total = obtener_duracion_mp3(ruta_completa);
@@ -517,7 +217,7 @@ static void cargar_cancion_de_carpeta(void)
     closedir(dir);
 
     // 3. ¡Actualizamos la pantalla con el archivo real!
-    // ── Justo antes del bloque "MAGIA: EXTRAER LA CARÁTULA" ─────────────
+    // Preparar extracción de carátula si existe
     if (nombre_encontrado[0] == '\0')
     {
         lv_obj_clear_flag(icono_mp3_global, LV_OBJ_FLAG_HIDDEN);
@@ -525,7 +225,7 @@ static void cargar_cancion_de_carpeta(void)
         return; // ← carpeta vacía, no intentamos extraer nada
     }
 
-    // ── MAGIA: EXTRAER LA CARÁTULA INCRUSTADA EN TIEMPO REAL ──
+    // Extraer carátula APIC si está incrustada
     char ruta_temp_jpg[256] = "../src/tarjeta_sd/cover_temp.jpg";
     char ruta_lvgl_jpg[256] = "A:../src/tarjeta_sd/cover_temp.jpg";
 
@@ -557,12 +257,13 @@ static void cargar_cancion_de_carpeta(void)
 
 void clock_screen_create(void)
 {
+    alarma_init();
     lv_obj_t *pantalla = lv_scr_act();
     lv_obj_set_style_bg_color(pantalla, COLOR_FONDO, 0);
     lv_obj_set_style_bg_opa(pantalla, LV_OPA_COVER, 0);
     lv_obj_clear_flag(pantalla, LV_OBJ_FLAG_SCROLLABLE);
 
-    // ── CAJA DE LA HORA ESTILO PIXEL ART ──
+    // Caja de la hora (estilo pixel art)
     lv_obj_t *bloque_hora = lv_obj_create(pantalla);
     lv_obj_set_size(bloque_hora, 280, 110);
     lv_obj_set_pos(bloque_hora, 40, 40);
@@ -578,7 +279,7 @@ void clock_screen_create(void)
     lv_label_set_text(label_hora, "00:00");
     lv_obj_align(label_hora, LV_ALIGN_CENTER, 0, 0);
 
-    // ── 🔔 TEXTO ALARMA PEQUEÑA (Al lado del reloj) ──
+    // Texto pequeño de estado de la alarma (lado del reloj)
     label_info_alarma_principal = lv_label_create(pantalla);
     lv_obj_set_pos(label_info_alarma_principal, 340, 80);                                // Situado justo a la derecha de la caja dorada
     lv_obj_set_style_text_color(label_info_alarma_principal, lv_color_hex(0xA3423C), 0); // Un rojo oscuro retro elegante
@@ -590,7 +291,7 @@ void clock_screen_create(void)
     lv_obj_set_style_text_font(label_fecha, &Minecraft48, 0);
     lv_obj_set_pos(label_fecha, 40, 170);
 
-    // ── 🤖 ROBOT ASISTENTE ──
+    // Robot asistente (imagen)
     lv_obj_t *contenedor_robot = lv_obj_create(pantalla);
     lv_obj_set_size(contenedor_robot, 300, 300);
     lv_obj_set_pos(contenedor_robot, 650, 250);
@@ -601,7 +302,7 @@ void clock_screen_create(void)
     lv_img_set_src(img_robot, &lumisAssistant);
     lv_obj_set_pos(img_robot, 680, 230);
 
-    // ── 💬 BOCADILLO DE TEXTO ──
+    // Bocadillo de texto
     lv_obj_t *bocadillo = lv_obj_create(pantalla);
     lv_obj_set_size(bocadillo, 640, 130);
     lv_obj_set_pos(bocadillo, 40, 260);
@@ -650,8 +351,7 @@ void clock_screen_create(void)
     lv_obj_set_style_text_font(label_campana, &Minecraft24, 0);
     lv_obj_align(label_campana, LV_ALIGN_CENTER, 0, 0);
 
-    // ── PANEL REPRODUCTOR MULTIMEDIA ──
-    // ── PANEL REPRODUCTOR MULTIMEDIA ──
+    // Panel reproductor multimedia
     panel_musica = lv_obj_create(pantalla);
     lv_obj_set_size(panel_musica, 944, 520);
     lv_obj_set_pos(panel_musica, 40, 40);
@@ -779,7 +479,7 @@ void clock_screen_create(void)
     lv_obj_set_style_text_color(label_cerrar, lv_color_white(), 0);
     lv_obj_align(label_cerrar, LV_ALIGN_CENTER, 0, 0);
 
-    // ── PANEL CONFIGURACIÓN DESPERTADOR ──
+    // Panel de configuración de la alarma
     panel_despertador = lv_obj_create(pantalla);
     lv_obj_set_size(panel_despertador, 944, 520);
     lv_obj_set_pos(panel_despertador, 40, 40);
@@ -878,11 +578,11 @@ void clock_screen_create(void)
     lv_obj_set_style_border_width(btn_cancelar, 4, 0);
     lv_obj_set_style_border_color(btn_cancelar, COLOR_BORDE_RETRO, 0);
 
-    // CAMBIO AQUÍ: Le asignamos una nueva función para que borre al hacer clic
+    // Botón borrar alarma: llama a cb_borrar_alarma
     lv_obj_add_event_cb(btn_cancelar, cb_borrar_alarma, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *label_cancelar = lv_label_create(btn_cancelar);
-    // CAMBIO AQUÍ: Ahora el texto dice BORRAR
+    // Etiqueta del botón borrar
     lv_label_set_text(label_cancelar, "BORRAR");
     lv_obj_set_style_text_font(label_cancelar, &Minecraft16, 0);
     lv_obj_set_style_text_color(label_cancelar, lv_color_white(), 0);
@@ -914,16 +614,15 @@ void clock_screen_update(void)
              meses[t->tm_mon]);
     lv_label_set_text(label_fecha, buf_fecha);
 
-    // ── backend de alarma confirmada ──
-    if (alarma_activa)
+    // Backend: comprobación de la alarma
+    if (alarma_debe_sonar(t))
     {
-        if (t->tm_hour == alarma_confirmada_hora && t->tm_min == alarma_confirmada_min && t->tm_sec == 0)
-        {
-            printf("\n[ALERTA DESPERTADOR] ¡¡RING RING!! Despierta Hugo, son las %02d:%02d\n", alarma_confirmada_hora, alarma_confirmada_min);
-        }
+        int ah, am;
+        alarma_get(&ah, &am);
+        printf("\n[ALERTA DESPERTADOR] ¡¡RING RING!! Despierta Hugo, son las %02d:%02d\n", ah, am);
     }
 
-    // ── Lógica de Progreso del MP3 de Nuria ──
+    // Lógica de progreso del MP3
     if (label_tiempo_progreso != NULL)
     {
         cancion_segundos_actual++;
@@ -937,7 +636,7 @@ void clock_screen_update(void)
         int min_actual = cancion_segundos_actual / 60;
         int seg_actual = cancion_segundos_actual % 60;
 
-        // ── ESTO ES LO NUEVO: Calculamos los minutos y segundos TOTALES ──
+        // Calcular minutos/segundos totales
         int min_total = cancion_segundos_total / 60;
         int seg_total = cancion_segundos_total % 60;
 
