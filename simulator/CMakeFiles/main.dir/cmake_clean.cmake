@@ -14,6 +14,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o.d"
   "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o"
   "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o.d"
+  "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o"
+  "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o.d"
+  "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o"
+  "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o.d"
   "bin/main"
   "bin/main.pdb"
 )

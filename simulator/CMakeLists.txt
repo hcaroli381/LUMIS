@@ -30,6 +30,8 @@ add_executable(main ../src/main.c
     ../src/screens/Minecraft48.c
     ../src/screens/lumisAssistant.c
     ../src/screens/Minecraft24.c
+    ../src/utils/audio.c
+    ../src/utils/alarma.c
    )
 
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)

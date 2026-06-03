@@ -170,6 +170,34 @@ CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s: cmak
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/hugo/Documentos/lumis/src/screens/Minecraft24.c -o CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.s
 
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o: /home/hugo/Documentos/lumis/src/utils/audio.c
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hugo/Documentos/lumis/simulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o -MF CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o.d -o CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o -c /home/hugo/Documentos/lumis/src/utils/audio.c
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/hugo/Documentos/lumis/src/utils/audio.c > CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.i
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/hugo/Documentos/lumis/src/utils/audio.c -o CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.s
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o: /home/hugo/Documentos/lumis/src/utils/alarma.c
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/hugo/Documentos/lumis/simulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o -MF CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o.d -o CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o -c /home/hugo/Documentos/lumis/src/utils/alarma.c
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/hugo/Documentos/lumis/src/utils/alarma.c > CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.i
+
+CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/hugo/Documentos/lumis/src/utils/alarma.c -o CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.s
+
 # Object files for target main
 main_OBJECTS = \
 "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/main.c.o" \
@@ -178,7 +206,9 @@ main_OBJECTS = \
 "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft16.c.o" \
 "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o" \
 "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o" \
-"CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o"
+"CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o" \
+"CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o" \
+"CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o"
 
 # External object files for target main
 main_EXTERNAL_OBJECTS =
@@ -190,6 +220,8 @@ bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft16
 bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o
 bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o
 bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft24.c.o
+bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o
+bin/main: CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o
 bin/main: CMakeFiles/main.dir/build.make
 bin/main: CMakeFiles/main.dir/compiler_depend.ts
 bin/main: lvgl/lib/liblvgl.a
@@ -203,7 +235,7 @@ bin/main: lvgl/lib/liblvgl_examples.a
 bin/main: lvgl/lib/liblvgl_demos.a
 bin/main: lvgl/lib/liblvgl_thorvg.a
 bin/main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hugo/Documentos/lumis/simulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable bin/main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/hugo/Documentos/lumis/simulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable bin/main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

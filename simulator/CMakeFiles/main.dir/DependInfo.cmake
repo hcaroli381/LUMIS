@@ -15,6 +15,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/hugo/Documentos/lumis/src/screens/Minecraft48.c" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o" "gcc" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/Minecraft48.c.o.d"
   "/home/hugo/Documentos/lumis/src/screens/clock_screen.c" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o" "gcc" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/clock_screen.c.o.d"
   "/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o" "gcc" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.o.d"
+  "/home/hugo/Documentos/lumis/src/utils/alarma.c" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o" "gcc" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o.d"
+  "/home/hugo/Documentos/lumis/src/utils/audio.c" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o" "gcc" "CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o.d"
   "" "bin/main" "gcc" "CMakeFiles/main.dir/link.d"
   )
 

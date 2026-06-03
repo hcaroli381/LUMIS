@@ -407,6 +407,54 @@ home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s
 .PHONY : home/hugo/Documentos/lumis/src/screens/lumisAssistant.c.s
 
+home/hugo/Documentos/lumis/src/utils/alarma.o: home/hugo/Documentos/lumis/src/utils/alarma.c.o
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.o
+
+# target to build an object file
+home/hugo/Documentos/lumis/src/utils/alarma.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.o
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.c.o
+
+home/hugo/Documentos/lumis/src/utils/alarma.i: home/hugo/Documentos/lumis/src/utils/alarma.c.i
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.i
+
+# target to preprocess a source file
+home/hugo/Documentos/lumis/src/utils/alarma.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.i
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.c.i
+
+home/hugo/Documentos/lumis/src/utils/alarma.s: home/hugo/Documentos/lumis/src/utils/alarma.c.s
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.s
+
+# target to generate assembly for a file
+home/hugo/Documentos/lumis/src/utils/alarma.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/alarma.c.s
+.PHONY : home/hugo/Documentos/lumis/src/utils/alarma.c.s
+
+home/hugo/Documentos/lumis/src/utils/audio.o: home/hugo/Documentos/lumis/src/utils/audio.c.o
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.o
+
+# target to build an object file
+home/hugo/Documentos/lumis/src/utils/audio.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.o
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.c.o
+
+home/hugo/Documentos/lumis/src/utils/audio.i: home/hugo/Documentos/lumis/src/utils/audio.c.i
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.i
+
+# target to preprocess a source file
+home/hugo/Documentos/lumis/src/utils/audio.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.i
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.c.i
+
+home/hugo/Documentos/lumis/src/utils/audio.s: home/hugo/Documentos/lumis/src/utils/audio.c.s
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.s
+
+# target to generate assembly for a file
+home/hugo/Documentos/lumis/src/utils/audio.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/home/hugo/Documentos/lumis/src/utils/audio.c.s
+.PHONY : home/hugo/Documentos/lumis/src/utils/audio.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -446,6 +494,12 @@ help:
 	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.o"
 	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.i"
 	@echo "... home/hugo/Documentos/lumis/src/screens/lumisAssistant.s"
+	@echo "... home/hugo/Documentos/lumis/src/utils/alarma.o"
+	@echo "... home/hugo/Documentos/lumis/src/utils/alarma.i"
+	@echo "... home/hugo/Documentos/lumis/src/utils/alarma.s"
+	@echo "... home/hugo/Documentos/lumis/src/utils/audio.o"
+	@echo "... home/hugo/Documentos/lumis/src/utils/audio.i"
+	@echo "... home/hugo/Documentos/lumis/src/utils/audio.s"
 .PHONY : help
 
 
