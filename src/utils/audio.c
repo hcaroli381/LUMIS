@@ -6,6 +6,8 @@
 // Implementaciones de utilidades de audio.
 // Comentarios esenciales en español explican la lógica principal.
 
+static int estado_pausado = 0;
+
 int obtener_duracion_mp3(const char *ruta_archivo)
 {
     FILE *f = fopen(ruta_archivo, "rb");
@@ -220,7 +222,16 @@ int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg)
                 FILE *out = fopen(ruta_salida_jpg, "wb");
                 if (out)
                 {
-                    fwrite(apic + offset, 1, imagen_size, out);
+                    long real_size = imagen_size;
+                    for (long j = imagen_size - 2; j >= 0; j--)
+                    {
+                        if (apic[offset + j] == 0xFF && apic[offset + j + 1] == 0xD9)
+                        {
+                            real_size = j + 2; // incluimos el propio FF D9
+                            break;
+                        }
+                    }
+                    fwrite(apic + offset, 1, real_size, out);
                     fclose(out);
                     encontrado = 1;
                 }
@@ -233,4 +244,71 @@ int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg)
 
     free(tag_data);
     return encontrado;
+}
+// ─── IMPLEMENTACIÓN DE REPRODUCCIÓN (AISLADO PARA ARDUINO) ───
+
+// Variable interna para guardar el estado del reproductor
+
+void audio_play(const char *ruta_mp3)
+{
+    audio_stop();
+    if (ruta_mp3 == NULL)
+        return;
+
+    estado_pausado = 0; // Al empezar una canción nueva, NO está pausada
+
+#if defined(__linux__)
+    char comando[512];
+    const char *ruta_real = ruta_mp3;
+
+    if (strncmp(ruta_real, "A:", 2) == 0)
+    {
+        ruta_real += 2;
+    }
+
+    snprintf(comando, sizeof(comando), "mpv --no-video \"%s\" > /dev/null 2>&1 &", ruta_real);
+    int res = system(comando);
+    (void)res;
+#else
+    // --- Arduino real ---
+#endif
+}
+
+void audio_stop(void)
+{
+    estado_pausado = 0;
+#if defined(__linux__)
+    int res = system("killall mpv > /dev/null 2>&1");
+    (void)res;
+#else
+    // --- Arduino real ---
+#endif
+}
+
+void audio_pause_toggle(void)
+{
+#if defined(__linux__)
+    int res;
+    if (estado_pausado == 0)
+    {
+        // Si estaba sonando, mandamos señal de congelar (SIGSTOP)
+        res = system("killall -SIGSTOP mpv > /dev/null 2>&1");
+        estado_pausado = 1;
+    }
+    else
+    {
+        // Si estaba pausado, mandamos señal de continuar (SIGCONT)
+        res = system("killall -SIGCONT mpv > /dev/null 2>&1");
+        estado_pausado = 0;
+    }
+    (void)res;
+#else
+    // --- Arduino real ---
+    // estado_pausado = !estado_pausado;
+#endif
+}
+
+int audio_is_paused(void)
+{
+    return estado_pausado;
 }

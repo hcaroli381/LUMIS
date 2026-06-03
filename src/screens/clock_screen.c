@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../utils/alarma.h"
+#include "../utils/audio.h"
 
 // fuentes
 LV_FONT_DECLARE(Minecraft48);
@@ -62,6 +63,10 @@ static void cb_toggle_reproductor(lv_event_t *e)
     // Al final de cb_cambiar_modo añadimos esto:
     indice_cancion_actual = 0; // Reseteamos al cambiar de carpeta
     cargar_cancion_de_carpeta();
+    if (lv_obj_has_flag(panel_musica, LV_OBJ_FLAG_HIDDEN))
+    {
+        audio_stop();
+    }
 }
 static void cb_siguiente_cancion(lv_event_t *e)
 {
@@ -239,11 +244,26 @@ static void cargar_cancion_de_carpeta(void)
         lv_obj_add_flag(icono_mp3_global, LV_OBJ_FLAG_HIDDEN);
         lv_obj_clear_flag(img_caratula, LV_OBJ_FLAG_HIDDEN);
 
-        // Vaciamos la memoria caché de LVGL para obligarle a cargar la nueva foto
-        // lv_image_cache_drop(NULL);
+        // Truco nativo de LVGL para vaciar la caché de imágenes sin funciones raras:
+        lv_img_set_src(img_caratula, NULL); // Esto fuerza a LVGL a liberar la imagen anterior y cargar la nueva al siguiente set_src
 
         // Le pasamos el JPG puro recién extraído al simulador
         lv_img_set_src(img_caratula, ruta_lvgl_jpg);
+
+        lv_image_header_t img_info;
+        if (lv_image_decoder_get_info(ruta_lvgl_jpg, &img_info) == LV_RESULT_OK)
+        {
+            uint32_t lado = img_info.w > img_info.h ? img_info.w : img_info.h;
+            if (lado > 172 && lado > 0)
+            {
+                uint16_t zoom = (uint16_t)((172 * 256) / lado);
+                lv_img_set_zoom(img_caratula, zoom);
+            }
+            else
+            {
+                lv_img_set_zoom(img_caratula, 256);
+            }
+        }
     }
     else
     {
@@ -253,6 +273,13 @@ static void cargar_cancion_de_carpeta(void)
     }
     // Cada vez que cambia de canción, el segundero de Nuria vuelve a empezar en 0:00
     cancion_segundos_actual = 0;
+
+    audio_play(ruta_completa);
+}
+static void cb_btn_play_click(lv_event_t *e)
+{
+    (void)e;
+    audio_pause_toggle();
 }
 
 void clock_screen_create(void)
@@ -448,6 +475,7 @@ void clock_screen_create(void)
     lv_label_set_text(label_play, "PLAY");
     lv_obj_set_style_text_font(label_play, &Minecraft24, 0);
     lv_obj_align(label_play, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_event_cb(btn_play, cb_btn_play_click, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t *btn_next = lv_button_create(panel_musica);
     lv_obj_set_size(btn_next, 160, 80);
@@ -623,9 +651,14 @@ void clock_screen_update(void)
     }
 
     // Lógica de progreso del MP3
-    if (label_tiempo_progreso != NULL)
+    // Lógica de progreso del MP3 (Corregida para Arduino)
+    if (label_tiempo_progreso != NULL && !lv_obj_has_flag(panel_musica, LV_OBJ_FLAG_HIDDEN))
     {
-        cancion_segundos_actual++;
+        // ¡AQUÍ ESTÁ EL TRUCO! Si la función nos dice que está pausado, saltamos el incremento
+        if (audio_is_paused() == 0)
+        {
+            cancion_segundos_actual++;
+        }
 
         if (cancion_segundos_actual > cancion_segundos_total)
         {

@@ -16,6 +16,11 @@ extern "C"
     // Retorna 1 si se extrajo correctamente, 0 en caso contrario.
     int extraer_caratula_mp3(const char *ruta_mp3, const char *ruta_salida_jpg);
 
+    void audio_play(const char *ruta_mp3);
+    void audio_stop(void);
+    void audio_pause_toggle(void);
+    int audio_is_paused(void);
+
 #ifdef __cplusplus
 }
 #endif
